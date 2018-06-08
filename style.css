@@ -10,6 +10,7 @@ td.blob-code.blob-code-inner {
 }
 .collapser:hover {
   opacity: 1;
+  cursor: pointer;
 }
 .sideways {
   transform: rotate(-90deg);
