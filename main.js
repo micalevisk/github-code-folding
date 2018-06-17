@@ -63,14 +63,11 @@
   const stack = [];
   const blockStarts = [];
   const countLeadingWhitespace = arr => {
-    const getWhitespaceIndex = i => {
-      if (arr[i] !== ' ' && arr[i] !== '\t') {
-        return i;
+    let i=0;
+    for (; i < arr.length; ++i) {
+      if (arr[i] !== ' ' && arr[i] !== '\t') return i;
       }
-      i++;
-      return getWhitespaceIndex(i);
-    }
-    return getWhitespaceIndex(0);
+    return i;
   };
 
   const last = arr => arr[arr.length - 1];
