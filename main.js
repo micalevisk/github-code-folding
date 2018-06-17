@@ -5,6 +5,8 @@
   // make sure to reset it.
   (function resetPage() {
     const arrows = document.querySelectorAll('.collapser');
+    if (arrows.length <= 0) return;
+
     arrows.forEach(a => a.parentNode.removeChild(a));
     const ellipsis = document.querySelectorAll('.ellipsis');
     ellipsis.forEach(e => e.parentNode.removeChild(e));
