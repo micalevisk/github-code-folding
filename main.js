@@ -74,8 +74,10 @@
 
   const last = arr => arr[arr.length - 1];
   const getPreviousSpaces = (map, lineNum) => {
-    let prev = map.get(lineNum - 1);
-    return prev === -1 ? getPreviousSpaces(map, lineNum - 1) : {lineNum: lineNum - 1, count: prev};
+    do {
+      let prev = map.get(--lineNum);
+      if (prev !== -1) return {lineNum, count: prev};
+    } while(true);
   };
 
   for (let lineNum = 0; lineNum < codeLinesText.length; lineNum++) {
