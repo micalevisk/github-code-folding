@@ -1,3 +1,5 @@
+//TODO:
+//- reduzir uso de loops (native-for, foreach) e recursões
 (function() {
   'use strict';
 
@@ -12,7 +14,7 @@
     ellipsis.forEach(e => e.parentNode.removeChild(e));
     const hiddenLines = document.querySelectorAll('.hidden-line');
     hiddenLines.forEach(l => l.classList.remove('hidden-line'));
-  })()
+  })();
 
   const [...codeLines] = document.querySelectorAll('.file table.highlight .blob-code-inner');
   const codeLinesText = codeLines.map(l => l.textContent);
@@ -66,7 +68,7 @@
     let i=0;
     for (; i < arr.length; ++i) {
       if (arr[i] !== ' ' && arr[i] !== '\t') return i;
-      }
+    }
     return i;
   };
 
@@ -78,23 +80,24 @@
     } while(true);
   };
 
-  for (let lineNum = 0; lineNum < codeLinesText.length; lineNum++) {
+  function tryPair(lineNum, count) {
+    let top = last(stack);
+    if (count !== -1 && count <= spaceMap.get(top)) {
+      pairs.set(top, lineNum);
+      codeLines[top].setAttribute('block-start', 'true');
+      codeLines[top].appendChild(arrowFactory(`gcf-${top + 1}`));
+      blockStarts.push(codeLines[top]);
+      stack.pop();
+      return tryPair();
+    }
+  }
+
+  for (let lineNum = 0; lineNum < codeLinesText.length; ++lineNum) {
     let line = codeLinesText[lineNum];
     let count = line.trim().length ? countLeadingWhitespace(line.split('')) : -1;
     spaceMap.set(lineNum, count);
 
-    function tryPair() {
-      let top = last(stack);
-      if (count !== -1 && count <= spaceMap.get(top)) {
-        pairs.set(top, lineNum);
-        codeLines[top].setAttribute('block-start', 'true');
-        codeLines[top].appendChild(arrowFactory(`gcf-${top + 1}`));
-        blockStarts.push(codeLines[top]);
-        stack.pop();
-        return tryPair();
-      }
-    }
-    tryPair();
+    tryPair(lineNum, count);
 
     let prevSpaces = getPreviousSpaces(spaceMap, lineNum);
     if (count > prevSpaces.count) {
@@ -171,4 +174,4 @@
   blockStarts.forEach(line => {
     line.addEventListener('click', ellipsisListener);
   });
-})()
+})();
